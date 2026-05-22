@@ -37,7 +37,7 @@ jobs:
 
       - name: Convert SBOM JSON to XML
         run: |
-          cyclonedx convert             --input-file sbom/application.cdx.json             --output-file sbom/application.cdx.xml             --output-format xml
+          cyclonedx convert --input-file sbom/application.cdx.json --output-file sbom/application.cdx.xml             --output-format xml
 
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v4

@@ -1,75 +1,103 @@
-# Dev Sec Ops Automated Scanning
-Security automation jobs built with GitHub Actions using Security automation pipelines built with GitHub Actions using industry-standard open-source tooling for dependency analysis, SBOM generation, SAST, and Infrastructure-as-Code security validation. Soon to add more features.
+# DevSecOps Security Scanning Pipelines
 
-## Tooling
+Security automation pipelines built with GitHub Actions using open-source tooling for dependency analysis, SBOM generation, SAST, secrets scanning, container security, and Infrastructure-as-Code validation.
+
+## Tools Used
 
 ### OSV Scanner
 Dependency vulnerability scanner maintained by Google for detecting known vulnerabilities in open-source packages and lockfiles.
 
-- Repository: :[contentReference[oaicite:0]{index=0}](https://github.com/google/osv-scanner)
+- Repository: https://github.com/google/osv-scanner
 
 ### CycloneDX CLI
 CLI utility for validating, converting, merging, and analyzing CycloneDX Software Bill of Materials (SBOMs).
 
-- Repository:[ :contentReference[oaicite:1]{index=1}](https://github.com/CycloneDX/cyclonedx-cli)
+- Repository: https://github.com/CycloneDX/cyclonedx-cli
 
 ### Bearer
 Static Application Security Testing (SAST) and sensitive data analysis platform focused on identifying security and privacy risks within source code.
 
-- Repository:[ :contentReference[oaicite:2]{index=2}](https://github.com/Bearer/bearer/security)
+- Repository: https://github.com/Bearer/bearer
 
 ### Checkov
-Infrastructure-as-Code security scanner supporting Terraform, Kubernetes, Dockerfiles, GitHub Actions, CloudFormation, Helm, and additional cloud-native technologies.
+Infrastructure-as-Code security scanner supporting Terraform, Kubernetes, Dockerfiles, GitHub Actions, CloudFormation, Helm, and cloud-native configuration files.
 
-- Repository:[ :contentReference[oaicite:3]{index=3}](https://github.com/bridgecrewio/checkov)
+- Repository: https://github.com/bridgecrewio/checkov
 
-# Workflows
+### Trivy
+Cloud-native security scanner for vulnerabilities, misconfigurations, secrets, containers, filesystems, Git repositories, and SBOMs.
 
-| Workflow | Description |
-|---|---|
-| `osv-scanner.yml` | Performs dependency vulnerability analysis and exports SARIF + CycloneDX reports |
-| `cyclonedx-sbom.yml` | Generates, validates, and converts CycloneDX SBOM artifacts |
-| `bearer-sast.yml` | Executes SAST and sensitive data analysis against application source code |
-| `checkov-iac.yml` | Scans Infrastructure-as-Code and CI/CD configurations for security misconfigurations |
+- Repository: https://github.com/aquasecurity/trivy
+- GitHub Action: https://github.com/aquasecurity/trivy-action
+
+### Semgrep
+Static analysis engine for finding insecure coding patterns, dangerous API usage, injection risks, hardcoded secrets, and custom policy violations.
+
+- Repository: https://github.com/semgrep/semgrep
 
 ---
 
-# Pipeline Capabilities
+## Included Workflows
 
-- GitHub Actions CI/CD security automation
-- SARIF integration with GitHub Advanced Security
-- Automated SBOM generation and validation
-- Dependency vulnerability detection
+| Workflow | Purpose |
+|---|---|
+| `osv-scanner.yml` | Dependency vulnerability scanning with SARIF and CycloneDX outputs |
+| `cyclonedx-sbom.yml` | SBOM generation, validation, and conversion |
+| `bearer-sast.yml` | SAST and sensitive data analysis |
+| `checkov-iac.yml` | Infrastructure-as-Code and CI/CD security scanning |
+| `trivy-security.yml` | Filesystem vulnerability, misconfiguration, and secret scanning |
+| `semgrep-sast.yml` | Static code analysis for insecure coding patterns |
+
+---
+
+## Security Coverage
+
+This project demonstrates automated security coverage across:
+
+- Open-source dependency vulnerabilities
+- Software supply chain visibility
+- CycloneDX SBOM generation and validation
 - Static application security testing
-- Infrastructure-as-Code policy enforcement
-- Artifact retention for auditability and review
-- Scheduled and event-driven security scanning
+- Infrastructure-as-Code misconfigurations
+- Container and filesystem vulnerabilities
+- Secret exposure risks
+- CI/CD workflow security
+- Cloud-native configuration issues
 
-# Outputs
+---
+
+## Outputs
 
 Generated pipeline artifacts include:
 
 - SARIF security findings
-- CycloneDX SBOMs
-- Vulnerability assessment reports
-- Infrastructure misconfiguration findings
-- Source code security analysis reports
+- CycloneDX SBOM files
+- Dependency vulnerability reports
+- SAST reports
+- IaC misconfiguration findings
+- Trivy filesystem scan reports
+- Semgrep static analysis reports
 
-# Security Coverage
+---
 
-This repository includes scanning coverage for:
+## Usage
 
-- Open-source dependencies
-- CI/CD workflows
-- Terraform configurations
-- Kubernetes manifests
-- Dockerfiles
-- Application source code
-- Sensitive data exposure risks
-- Software supply chain artifacts
+Place the workflow files inside:
 
-# Usage
+```text
+.github/workflows/
+```
 
-```bash
-git clone https://github.com/yourusername/devsecops-security-pipelines.git
-cd devsecops-security-pipelines
+Then push to `main`, open a pull request, or manually run the workflows from the GitHub Actions tab.
+
+Security findings are available in:
+
+- GitHub Actions workflow runs
+- GitHub Security / Code Scanning
+- Uploaded workflow artifacts
+
+---
+
+## Project Goal
+
+This repository demonstrates hands-on DevSecOps implementation through reusable CI/CD security automation. The goal is to show practical security engineering experience across dependency scanning, SBOM handling, SAST, IaC validation, secret scanning, and cloud-native security workflows.

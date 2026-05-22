@@ -26,7 +26,7 @@ jobs:
       - name: Run Checkov scan
         run: |
           mkdir -p reports
-          checkov -d .             --output cli             --output sarif             --output-file-path console,reports/checkov-results.sarif
+          checkov -d . --output cli --output sarif --output-file-path console,reports/checkov-results.sarif
         continue-on-error: true
 
       - name: Upload Checkov SARIF to GitHub Code Scanning
