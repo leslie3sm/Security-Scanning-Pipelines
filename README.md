@@ -6,22 +6,22 @@ Security automation jobs built with GitHub Actions using Security automation pip
 ### OSV Scanner
 Dependency vulnerability scanner maintained by Google for detecting known vulnerabilities in open-source packages and lockfiles.
 
-- Repository: :contentReference[oaicite:0]{index=0}
+- Repository: :[contentReference[oaicite:0]{index=0}](https://github.com/google/osv-scanner)
 
 ### CycloneDX CLI
 CLI utility for validating, converting, merging, and analyzing CycloneDX Software Bill of Materials (SBOMs).
 
-- Repository: :contentReference[oaicite:1]{index=1}
+- Repository:[ :contentReference[oaicite:1]{index=1}](https://github.com/CycloneDX/cyclonedx-cli)
 
 ### Bearer
 Static Application Security Testing (SAST) and sensitive data analysis platform focused on identifying security and privacy risks within source code.
 
-- Repository: :contentReference[oaicite:2]{index=2}
+- Repository:[ :contentReference[oaicite:2]{index=2}](https://github.com/Bearer/bearer/security)
 
 ### Checkov
 Infrastructure-as-Code security scanner supporting Terraform, Kubernetes, Dockerfiles, GitHub Actions, CloudFormation, Helm, and additional cloud-native technologies.
 
-- Repository: :contentReference[oaicite:3]{index=3}
+- Repository:[ :contentReference[oaicite:3]{index=3}](https://github.com/bridgecrewio/checkov)
 
 # Workflows
 
