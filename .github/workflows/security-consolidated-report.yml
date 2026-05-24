@@ -45,7 +45,6 @@ jobs:
           sha = os.environ["COMMIT_SHA"]
 
           SCANNER_WORKFLOWS = [
-              "CycloneDX SBOM Validation and Conversion",
               "Checkov IaC Security Scan",
               "OSV Dependency Vulnerability Scan",
               "Semgrep SAST Scan",
@@ -125,7 +124,6 @@ jobs:
               "osv-security-reports": "OSV",
               "semgrep-sast-reports": "Semgrep",
               "trivy-security-reports": "Trivy",
-              "cyclonedx-sbom": "CycloneDX",
           }
 
           def gh_get(url):

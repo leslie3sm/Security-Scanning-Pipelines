@@ -7,7 +7,6 @@ This repository demonstrates DevSecOps security automation workflows using GitHu
 The project includes workflow examples for:
 
 - Dependency vulnerability scanning with OSV Scanner
-- SBOM generation and validation with CycloneDX tooling
 - Static application security testing with Bearer and Semgrep
 - Infrastructure-as-Code scanning with Checkov
 - Filesystem, secret, misconfiguration, and container-oriented scanning with Trivy

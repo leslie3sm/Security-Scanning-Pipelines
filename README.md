@@ -9,11 +9,6 @@ Dependency vulnerability scanner maintained by Google for detecting known vulner
 
 - Repository: https://github.com/google/osv-scanner
 
-### CycloneDX CLI
-CLI utility for validating, converting, merging, and analyzing CycloneDX Software Bill of Materials (SBOMs).
-
-- Repository: https://github.com/CycloneDX/cyclonedx-cli
-
 ### Checkov
 Infrastructure-as-Code security scanner supporting Terraform, Kubernetes, Dockerfiles, GitHub Actions, CloudFormation, Helm, and cloud-native configuration files.
 
@@ -36,8 +31,7 @@ Static analysis engine for finding insecure coding patterns, dangerous API usage
 
 | Workflow | Purpose |
 |---|---|
-| `osv-scanner.yml` | Dependency vulnerability scanning with SARIF and CycloneDX outputs |
-| `cyclonedx-sbom.yml` | SBOM generation, validation, and conversion |
+| `osv-scanner.yml` | Dependency vulnerability scanning with SARIF outputs |
 | `checkov-iac.yml` | Infrastructure-as-Code and CI/CD security scanning |
 | `trivy-security.yml` | Filesystem vulnerability, misconfiguration, and secret scanning |
 | `semgrep-sast.yml` | Static code analysis for insecure coding patterns |
@@ -51,7 +45,6 @@ This project demonstrates automated security coverage across:
 
 - Open-source dependency vulnerabilities
 - Software supply chain visibility
-- CycloneDX SBOM generation and validation
 - Static application security testing
 - Infrastructure-as-Code misconfigurations
 - Container and filesystem vulnerabilities
@@ -66,7 +59,6 @@ This project demonstrates automated security coverage across:
 Generated pipeline artifacts include:
 
 - SARIF security findings
-- CycloneDX SBOM files
 - Dependency vulnerability reports
 - SAST reports
 - IaC misconfiguration findings
@@ -105,4 +97,4 @@ Security findings are available in:
 
 ## Project Goal
 
-This repository demonstrates hands-on DevSecOps implementation through reusable CI/CD security automation. The goal is to show practical security engineering experience across dependency scanning, SBOM handling, SAST, IaC validation, secret scanning, and cloud-native security workflows.
+This repository demonstrates hands-on DevSecOps implementation through reusable CI/CD security automation. The goal is to show practical security engineering experience across dependency scanning, SAST, IaC validation, secret scanning, and cloud-native security workflows.
