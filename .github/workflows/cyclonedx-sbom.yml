@@ -29,7 +29,9 @@ jobs:
       - name: Generate CycloneDX SBOM
         run: |
           mkdir -p sbom
-          osv-scanner scan source -r . --format cyclonedx-1-5 > sbom/application.cdx.json
+          tmp_cdx="$(mktemp)"
+          osv-scanner scan source -r . --format cyclonedx-1-5 > "$tmp_cdx"
+          mv "$tmp_cdx" sbom/application.cdx.json
 
       - name: Validate SBOM
         run: |

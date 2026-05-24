@@ -20,14 +20,15 @@ jobs:
 
       - name: Install Bearer CLI
         run: |
-          curl -sfL https://raw.githubusercontent.com/Bearer/bearer/main/contrib/install.sh | sh
-          echo "$HOME/.bearer/bin" >> $GITHUB_PATH
+          curl -sSL https://github.com/Bearer/bearer/releases/latest/download/bearer_linux_amd64.tar.gz -o /tmp/bearer.tar.gz
+          tar -xzf /tmp/bearer.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/bearer /usr/local/bin/bearer
+          /usr/local/bin/bearer --version
 
       - name: Run Bearer SAST scan
         run: |
           mkdir -p reports
-          bearer scan . --format sarif --output reports/bearer-results.sarif
-        continue-on-error: true
+          /usr/local/bin/bearer scan . --format sarif --output reports/bearer-results.sarif
 
       - name: Upload Bearer SARIF to GitHub Code Scanning
         if: ${{ hashFiles('reports/bearer-results.sarif') != '' }}
