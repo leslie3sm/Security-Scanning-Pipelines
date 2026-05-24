@@ -3,11 +3,6 @@ name: Security Consolidated Excel Report
 on:
   workflow_run:
     workflows:
-      - OSV Dependency Vulnerability Scan
-      - CycloneDX SBOM Validation and Conversion
-      - Bearer SAST and Privacy Scan
-      - Checkov IaC Security Scan
-      - Trivy Filesystem and Container Security Scan
       - Semgrep SAST Scan
     types:
       - completed
@@ -19,7 +14,7 @@ permissions:
 
 jobs:
   build-security-excel:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-latest
 
     steps:

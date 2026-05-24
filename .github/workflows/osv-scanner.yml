@@ -37,7 +37,8 @@ jobs:
         continue-on-error: true
 
       - name: Upload OSV SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ hashFiles('reports/osv-results.sarif') != '' }}
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: reports/osv-results.sarif
 
@@ -46,3 +47,4 @@ jobs:
         with:
           name: osv-security-reports
           path: reports/
+          if-no-files-found: warn

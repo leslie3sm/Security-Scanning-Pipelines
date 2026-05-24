@@ -23,8 +23,8 @@ jobs:
 
       - name: Install CycloneDX CLI
         run: |
-          dotnet tool install --global CycloneDX.CLI
-          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          curl -sSL https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -o /usr/local/bin/cyclonedx
+          chmod +x /usr/local/bin/cyclonedx
 
       - name: Generate CycloneDX SBOM
         run: |
@@ -44,3 +44,4 @@ jobs:
         with:
           name: cyclonedx-sbom
           path: sbom/
+          if-no-files-found: warn
