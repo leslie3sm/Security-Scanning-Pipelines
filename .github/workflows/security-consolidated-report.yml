@@ -11,8 +11,8 @@ permissions:
   actions: read
 
 concurrency:
-  group: security-report-${{ github.ref }}
-  cancel-in-progress: true
+    group: security-report-${{ github.event.pull_request.head.sha || github.sha }}
+    cancel-in-progress: true
 
 jobs:
   build-security-excel:
