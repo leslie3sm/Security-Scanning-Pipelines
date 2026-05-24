@@ -10,6 +10,10 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: security-report-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-security-excel:
     runs-on: ubuntu-latest
@@ -102,6 +106,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           python - <<'PY'
+          import http.client
           import io
           import json
           import os
@@ -109,8 +114,6 @@ jobs:
           import urllib.parse
           import urllib.request
           import zipfile
-
-          urllib.request.urlparse = urllib.parse.urlparse
 
           repo = os.environ["REPO"]
           token = os.environ["GH_TOKEN"]
@@ -125,16 +128,6 @@ jobs:
               "cyclonedx-sbom": "CycloneDX",
           }
 
-          class _StripAuthOnRedirect(urllib.request.HTTPRedirectHandler):
-              def redirect_request(self, req, fp, code, msg, headers, newurl):
-                  new_req = super().redirect_request(req, fp, code, msg, headers, newurl)
-                  if new_req and "github.com" not in urllib.request.urlparse(newurl).netloc:
-                      new_req.headers.pop("Authorization", None)
-                      new_req.unredirected_hdrs.pop("Authorization", None)
-                  return new_req
-
-          _opener = urllib.request.build_opener(_StripAuthOnRedirect)
-
           def gh_get(url):
               req = urllib.request.Request(
                   url,
@@ -144,8 +137,28 @@ jobs:
                       "X-GitHub-Api-Version": "2022-11-28",
                   },
               )
-              with _opener.open(req) as response:
+              with urllib.request.urlopen(req) as response:
                   return json.load(response)
+
+          def download_artifact_zip(url):
+              """Step 1: ask GitHub for the redirect URL. Step 2: fetch blob without auth."""
+              parsed = urllib.parse.urlparse(url)
+              conn = http.client.HTTPSConnection(parsed.netloc)
+              path = parsed.path + ("?" + parsed.query if parsed.query else "")
+              conn.request("GET", path, headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              })
+              resp = conn.getresponse()
+              if resp.status in (301, 302, 303, 307, 308):
+                  location = resp.getheader("Location")
+                  conn.close()
+                  with urllib.request.urlopen(location) as r:
+                      return r.read()
+              data = resp.read()
+              conn.close()
+              return data
 
           artifacts = []
           page = 1
@@ -183,17 +196,7 @@ jobs:
                   metadata["missing"].append({"artifact": name, "scan": label})
                   continue
 
-              download_url = artifact["archive_download_url"]
-              req = urllib.request.Request(
-                  download_url,
-                  headers={
-                      "Authorization": f"Bearer {token}",
-                      "Accept": "application/vnd.github+json",
-                      "X-GitHub-Api-Version": "2022-11-28",
-                  },
-              )
-              with _opener.open(req) as response:
-                  zip_bytes = response.read()
+              zip_bytes = download_artifact_zip(artifact["archive_download_url"])
 
               target = out_dir / name
               target.mkdir(parents=True, exist_ok=True)
