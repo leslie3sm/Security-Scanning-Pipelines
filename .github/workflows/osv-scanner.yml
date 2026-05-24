@@ -28,16 +28,21 @@ jobs:
       - name: Run OSV scan - SARIF
         run: |
           mkdir -p reports
-          osv-scanner scan source -r . --format sarif > reports/osv-results.sarif
+          tmp_sarif="$(mktemp)"
+          osv-scanner scan source -r . --format sarif > "$tmp_sarif"
+          mv "$tmp_sarif" reports/osv-results.sarif
         continue-on-error: true
 
       - name: Run OSV scan - CycloneDX output
         run: |
-          osv-scanner scan source -r . --format cyclonedx-1-5 > reports/osv-results.cdx.json
+          tmp_cdx="$(mktemp)"
+          osv-scanner scan source -r . --format cyclonedx-1-5 > "$tmp_cdx"
+          mv "$tmp_cdx" reports/osv-results.cdx.json
         continue-on-error: true
 
       - name: Upload OSV SARIF to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        if: ${{ hashFiles('reports/osv-results.sarif') != '' }}
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: reports/osv-results.sarif
 
@@ -46,3 +51,4 @@ jobs:
         with:
           name: osv-security-reports
           path: reports/
+          if-no-files-found: warn
