@@ -47,6 +47,7 @@ Static analysis engine for finding insecure coding patterns, dangerous API usage
 | `checkov-iac.yml` | Infrastructure-as-Code and CI/CD security scanning |
 | `trivy-security.yml` | Filesystem vulnerability, misconfiguration, and secret scanning |
 | `semgrep-sast.yml` | Static code analysis for insecure coding patterns |
+| `security-consolidated-report.yml` | Downloads latest scanner artifacts and builds one multi-sheet Excel report |
 
 ---
 
@@ -77,6 +78,7 @@ Generated pipeline artifacts include:
 - IaC misconfiguration findings
 - Trivy filesystem scan reports
 - Semgrep static analysis reports
+- Consolidated Excel report with a dedicated sheet per scanner and a Risk Review summary sheet
 
 ---
 
@@ -89,6 +91,15 @@ Place the workflow files inside:
 ```
 
 Then push to `main`, open a pull request, or manually run the workflows from the GitHub Actions tab.
+
+To generate a single consolidated workbook from all scanner artifacts, run:
+
+`Security Consolidated Excel Report`
+
+The workflow publishes these artifacts:
+
+- `security-consolidated-report` (Excel workbook: `reports/security-consolidated.xlsx`)
+- `security-consolidated-metadata` (artifact source and missing-source summary)
 
 Security findings are available in:
 
