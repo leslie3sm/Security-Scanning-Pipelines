@@ -45,7 +45,6 @@ jobs:
           out_dir.mkdir(parents=True, exist_ok=True)
 
           expected = {
-              "bearer-sast-report": "Bearer",
               "checkov-iac-report": "Checkov",
               "osv-security-reports": "OSV",
               "semgrep-sast-reports": "Semgrep",

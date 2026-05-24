@@ -14,11 +14,6 @@ CLI utility for validating, converting, merging, and analyzing CycloneDX Softwar
 
 - Repository: https://github.com/CycloneDX/cyclonedx-cli
 
-### Bearer
-Static Application Security Testing (SAST) and sensitive data analysis platform focused on identifying security and privacy risks within source code.
-
-- Repository: https://github.com/Bearer/bearer
-
 ### Checkov
 Infrastructure-as-Code security scanner supporting Terraform, Kubernetes, Dockerfiles, GitHub Actions, CloudFormation, Helm, and cloud-native configuration files.
 
@@ -43,7 +38,6 @@ Static analysis engine for finding insecure coding patterns, dangerous API usage
 |---|---|
 | `osv-scanner.yml` | Dependency vulnerability scanning with SARIF and CycloneDX outputs |
 | `cyclonedx-sbom.yml` | SBOM generation, validation, and conversion |
-| `bearer-sast.yml` | SAST and sensitive data analysis |
 | `checkov-iac.yml` | Infrastructure-as-Code and CI/CD security scanning |
 | `trivy-security.yml` | Filesystem vulnerability, misconfiguration, and secret scanning |
 | `semgrep-sast.yml` | Static code analysis for insecure coding patterns |
