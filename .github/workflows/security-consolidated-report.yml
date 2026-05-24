@@ -1,11 +1,8 @@
 name: Security Consolidated Excel Report
 
 on:
-  workflow_run:
-    workflows:
-      - Semgrep SAST Scan
-    types:
-      - completed
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -13,12 +10,11 @@ permissions:
   actions: read
 
 concurrency:
-  group: security-report-${{ github.event.workflow_run.head_sha || github.sha }}
+  group: security-report-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
   build-security-excel:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +30,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
           import json
@@ -53,6 +49,7 @@ jobs:
               "Semgrep SAST Scan",
               "Trivy Filesystem and Container Security Scan",
           ]
+
           timeout_seconds = 900
           poll_interval = 20
 
@@ -69,7 +66,11 @@ jobs:
                   return json.load(response)
 
           def latest_run_for_workflow(workflow_name):
-              q = urllib.parse.urlencode({"head_sha": sha, "per_page": 20})
+              q = urllib.parse.urlencode({
+                  "head_sha": sha,
+                  "event": "pull_request",
+                  "per_page": 30,
+              })
               url = f"https://api.github.com/repos/{repo}/actions/runs?{q}"
               data = gh_get(url)
               for run in data.get("workflow_runs", []):
@@ -102,7 +103,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
           import io
@@ -110,7 +111,6 @@ jobs:
           import os
           import pathlib
           import subprocess
-          import tempfile
           import urllib.request
           import zipfile
 
@@ -139,29 +139,18 @@ jobs:
               with urllib.request.urlopen(req) as response:
                   return json.load(response)
 
-          def download_artifact_zip(url):
-              with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
-                  tmp_path = pathlib.Path(tmp.name)
-              try:
-                  subprocess.run(
-                      [
-                          "curl",
-                          "-fsSL",
-                          "-H",
-                          f"Authorization: Bearer {token}",
-                          "-H",
-                          "Accept: application/vnd.github+json",
-                          "-H",
-                          "X-GitHub-Api-Version: 2022-11-28",
-                          "-o",
-                          str(tmp_path),
-                          url,
-                      ],
-                      check=True,
-                  )
-                  return tmp_path.read_bytes()
-              finally:
-                  tmp_path.unlink(missing_ok=True)
+          def download_artifact_zip(artifact_id):
+              result = subprocess.run(
+                  [
+                      "gh",
+                      "api",
+                      "--silent",
+                      f"/repos/{repo}/actions/artifacts/{artifact_id}/zip",
+                  ],
+                  check=True,
+                  capture_output=True,
+              )
+              return result.stdout
 
           artifacts = []
           page = 1
@@ -186,6 +175,8 @@ jobs:
               workflow_run = artifact.get("workflow_run", {})
               if workflow_run.get("head_sha") != sha:
                   continue
+              if workflow_run.get("event") != "pull_request":
+                  continue
               current = selected.get(name)
               if not current or artifact.get("created_at", "") > current.get("created_at", ""):
                   selected[name] = artifact
@@ -202,7 +193,7 @@ jobs:
                   metadata["missing"].append({"artifact": name, "scan": label})
                   continue
 
-              zip_bytes = download_artifact_zip(artifact["archive_download_url"])
+              zip_bytes = download_artifact_zip(artifact["id"])
               if not zipfile.is_zipfile(io.BytesIO(zip_bytes)):
                   raise RuntimeError(
                       f"Artifact {name} (id={artifact.get('id')}) did not download as a zip archive."
