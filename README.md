@@ -35,7 +35,7 @@ Static analysis engine for finding insecure coding patterns, dangerous API usage
 | `checkov-iac.yml` | Infrastructure-as-Code and CI/CD security scanning |
 | `trivy-security.yml` | Filesystem vulnerability, misconfiguration, and secret scanning |
 | `semgrep-sast.yml` | Static code analysis for insecure coding patterns |
-| `security-consolidated-report.yml` | Downloads latest scanner artifacts and builds one multi-sheet Excel report |
+| `security-consolidated-report.yml` | Downloads scanner artifacts for the current commit and builds one multi-sheet Excel report |
 
 ---
 
